@@ -1,0 +1,55 @@
+"""
+4.4.2 数据准备
+"""
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+# iris_dataset = pd.read_csv('../data/4/4-3/iris.csv')
+# X_train, X_test, y_train, y_test = train_test_split(
+#     iris_dataset[['sepal length', 'sepal width', 'petal length', 'petal width']], iris_dataset['target'],
+#     random_state=2)
+
+iris_dataset = load_iris()
+X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=2)
+
+iris_dataframe = pd.DataFrame(X_train, columns=iris_dataset.feature_names)
+# create a scatter matrix from the dataframe, color by y_train
+pd.plotting.scatter_matrix(iris_dataframe, c=y_train, figsize=(15, 15), marker='o', hist_kwds={'bins': 20}, s=60,
+                           alpha=.8)
+plt.show()
+"""
+4.4.3 算法实现
+"""
+from sklearn import datasets
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+
+# 导入鸢尾花数据并查看数据特征
+iris = datasets.load_iris()
+print('数据集结构：', iris.data.shape)
+# 获取属性
+iris_X = iris.data
+# 获取类别
+iris_y = iris.target
+# 划分成测试集和训练集
+iris_train_X, iris_test_X, iris_train_y, iris_test_y = train_test_split(iris_X, iris_y, test_size=0.2, random_state=0)
+# 分类器初始化
+knn = KNeighborsClassifier()
+# 对训练集进行训练
+knn.fit(iris_train_X, iris_train_y)
+# 对测试集数据的鸢尾花类型进行预测
+predict_result = knn.predict(iris_test_X)
+print('测试集大小：', iris_test_X.shape)
+print('真实结果：', iris_test_y)
+print('预测结果：', predict_result)
+# 显示预测精确率
+print('预测精确率：', knn.score(iris_test_X, iris_test_y))
+
+...
+n_neighbor: int 型，可选参数，缺省值是5，是KNN中近邻数据量K的值。
+weights:计算距离时使用的权重，缺失值是“uniform”,表示平等权重。也可以取值“distance”，则表示按照聚类的远近设置不同权重。还可以自主设计加权方式，并以函数形式调用。
+metric：距离的计算，缺失值是“minkowski”,当p=2，metric='minkowski'时使用的欧式距离，当p=1,matrix='minkowski'时使用的是曼哈顿距离。
+'''
